@@ -1,11 +1,6 @@
 <script>
     import Header from "$lib/components/core/Header.svelte";
     import FooterNav from "$lib/components/core/FooterNav.svelte";
-
-    function handleNavigation(){
-        
-    }
-
 </script>
 
 <svelte:head>
@@ -19,7 +14,7 @@
     <slot/>
 </main>
 
-<FooterNav />
+<FooterNav/>
 
 <style>
 
