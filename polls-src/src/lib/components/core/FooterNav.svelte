@@ -7,7 +7,7 @@
 <nav>
     <a href={navRoutes[0]}><img src={`${navIconParentPath}/home_icon.svg`} alt="Home Button Icon"></a>
     <a href={navRoutes[1]}><img class="main" src={`${navIconParentPath}/create_poll_icon.svg`} alt="Create Poll Button Icon"></a>
-    <a href={navRoutes[2]}><img src={`${navIconParentPath}/settings_icon.svg`} alt="Settings Button Icon"></a>
+    <a href={navRoutes[2]}><img src={`${navIconParentPath}/account_icon.svg`} alt="Settings Button Icon"></a>
 </nav>
 
 <style>

@@ -1,5 +1,5 @@
 <script>
-    import YesNoPoll from "./YesNoPoll.svelte";
+    import PollBase from "$lib/components/polls/PollBase.svelte";
 
     export let activeGroup;
     let pollGroupOpen = false;
@@ -23,11 +23,18 @@
 
     {#if pollGroupOpen}
     <section class="active-polls">
-        <YesNoPoll />
-        <YesNoPoll />
-        <YesNoPoll />
-        <YesNoPoll />
-        <YesNoPoll />
+        {#if activeGroup.groupPolls.length > 0}
+            {#each activeGroup.groupPolls as poll}
+                <PollBase bind:pollOptions={poll}/>
+            {/each}
+        {:else}
+            <div class="no-polls-dialouge">
+                <p class="no-polls">Doesn't look like there are any polls 👎</p>
+                {#if activeGroup.groupOwner == 'gugino'}
+                    <button><img src="./images/nav_icons/create_poll_icon.svg" alt="Icon to create a new pull inside the current group"></button>
+                {/if}
+            </div>  
+        {/if}
     </section>
     {/if}
 </section>
@@ -57,7 +64,7 @@
     .group-header button>img{
         filter: invert(16%) sepia(41%) saturate(5299%) hue-rotate(337deg) brightness(91%) contrast(94%);
     }
-
+    
     .active-polls{
         display: flex;
         flex-direction: column;
@@ -65,5 +72,36 @@
         padding: 0.8rem 0;
         max-height: 21.8rem;
         overflow-y: scroll;
+    }
+
+    .no-polls-dialouge{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.6rem;
+        user-select: none;
+    }
+
+    .no-polls-dialouge button{
+        background: var(--rich-black);
+        border: none;
+        cursor: pointer;
+    }
+
+    .no-polls-dialouge img{
+        width: 36px;
+        height: 36px;
+        filter: invert(100%) sepia(4%) saturate(7469%) hue-rotate(36deg) brightness(129%) contrast(104%);
+    }
+
+    .no-polls-dialouge img:hover{
+        filter: invert(57%) sepia(20%) saturate(7000%) hue-rotate(154deg) brightness(87%) contrast(94%);
+    }
+
+    .no-polls{
+        text-align: center;
+        font-weight: 600;
+        color: var(--light-red);
     }
 </style>

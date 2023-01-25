@@ -6,6 +6,7 @@
     --blue-green: #07A0C3;
     --white: #FFFFFF;
     --crimson-ua: #A71D31;
+    --light-red: #b6031e;
     --charcoal: #2A3D45;
     --rich-black: #101419;
 }
@@ -14,9 +15,9 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: var(--doc-font-family);
 }
 
 body{
-    font-family: var(--doc-font-family);
     background: var(--white);
 }

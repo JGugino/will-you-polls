@@ -1,11 +1,12 @@
 <script>
     import PollGroup from "$lib/components/polls/PollGroup.svelte";
     import ActiveGroup from '$lib/scripts/activeGroup.js'
+    import PollOptions from '$lib/scripts/pollOptions.js'
 
     let activePollGroups = [
-        new ActiveGroup('family-group', 'gugino', [], 'Family 👪', []),
-        new ActiveGroup('work-group', 'gugino', [], 'Work 🏢', []),
-        new ActiveGroup('school-group', 'gugino', [], 'School 🎒', []),
+        new ActiveGroup('family-group', 'gugino', [], 'Family 👪', [
+            new PollOptions('yn', ['Will you... create a poll?'], ['repeat', 'pin'], ['This is a comment']),
+        ]),
         new ActiveGroup('friends-group', 'gugino', [], 'Friends 🎮', []),
     ];
 </script>

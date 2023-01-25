@@ -19,5 +19,6 @@
     header h1{
         font-size: 42pt;
         color: var(--blue-green);
+        user-select: none;
     }
 </style>
