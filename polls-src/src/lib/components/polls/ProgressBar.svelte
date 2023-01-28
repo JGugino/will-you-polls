@@ -2,13 +2,15 @@
     import { onMount } from "svelte";
 
     export let barText = 'VOID';
-    export let barPercent = '20%';
+    export let barPercent = '0%';
 
     const barID = crypto.randomUUID();
 
-    onMount(()=>{ initBar(); });
+    onMount(()=>{ initBar(barID, barPercent); });
 
-    function initBar(){
+    $: updateProgessBar(barID, barPercent);
+
+    function initBar(barID, barPercent){
         const progressBar = document.querySelector(`.progress-bar-${barID}`);
         const progressBarFill = document.querySelector(`.progress-bar-fill-${barID}`);
         const progressBarText = document.querySelector(`.progress-bar-text-${barID}`);
@@ -40,6 +42,16 @@
         Object.assign(progressBar.style, barStyles);
         Object.assign(progressBarFill.style, fillStyles);
         Object.assign(progressBarText.style, textStyles);
+    }
+
+    function updateProgessBar(barID, barPercent){
+        const progressBarFill = document.querySelector(`.progress-bar-fill-${barID}`);
+
+        const fillStyles = {
+            width: barPercent || '50%'
+        }
+
+        if(progressBarFill) Object.assign(progressBarFill.style, fillStyles);
     }
 
 </script>

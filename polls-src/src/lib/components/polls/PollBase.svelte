@@ -8,27 +8,43 @@
 
     let pollSubmitted = false;
 
-    onMount(()=>{ initPoll(); });
+    let pollResults = [];
 
-    function initPoll(){
-        pollSubmitted = !hasContributed($currentUser.userID);
+    onMount(()=>{ initPoll($currentUser, pollOptions.pollContributors, pollOptions.pollType); });
 
-        switch(pollOptions.pollType){
-            case 'yn':
-                
-                break;
+    function initPoll(currentUser, contributors, type){
+        pollSubmitted = hasContributed(currentUser);
+
+        calculatePollTotals(contributors, type);
+    }
+
+    function handlePollSubmit(choice, type){
+        if(!pollSubmitted && !hasContributed($currentUser)){
+            pollOptions.pollContributors.push({userID: $currentUser.userID, choice});
+            pollSubmitted = hasContributed($currentUser);
+            calculatePollTotals(pollOptions.pollContributors, type);
         }
     }
 
-    function handlePollSubmit(choice){
-        if(!pollSubmitted){
-            pollOptions.pollContributors.push({userID: $currentUser.userID, choice});
-            console.log(pollOptions.pollContributors);
-            pollSubmitted = hasContributed($currentUser.userID);
+    function calculatePollTotals(contributors, type){
+        switch(type){
+            case 'yn':
+                let totalYes = 0, totalNo = 0, totalVotes = 0;
+
+                contributors.forEach((contributor)=>{
+                    if(contributor.choice === 'yes') totalYes++
+                    else if(contributor.choice === 'no') totalNo++
+                });
+                
+                totalVotes = totalYes+totalNo;
+
+                pollResults = [determinePollPercent(totalYes, totalVotes), determinePollPercent(totalNo, totalVotes)];
+            break;
         }
     }
 
     const hasContributed = (user) => pollOptions.pollContributors.filter(contributor => contributor.userID == user.userID).length > 0 || false;
+    const determinePollPercent = (votes, total) => (votes / total) * 100;
 </script>
 
 <div class="poll-base">
@@ -45,14 +61,16 @@
 
         <div class="poll-area">
             <!--### POLL OPTIONS ###-->
+
+            <!--### YES/NO POLL ###-->
             {#if pollOptions.pollType == 'yn'}
                 <div class="yes-no-poll">
                     {#if pollSubmitted}
-                        <ProgressBar />  
-                        <ProgressBar />  
+                        <ProgressBar barText={'YES'} barPercent={`${pollResults[0]}%`}/>  
+                        <ProgressBar barText={'NO'} barPercent={`${pollResults[1]}%`}/>  
                     {:else}
-                        <button class="option-button" on:click|preventDefault|stopPropagation={()=>{handlePollSubmit('yes')}}>YES</button>
-                        <button class="option-button" on:click|preventDefault|stopPropagation={()=>{handlePollSubmit('no')}}>NO</button>
+                        <button class="option-button" on:click|preventDefault|stopPropagation={()=>{handlePollSubmit('yes', pollOptions.pollType)}}>YES</button>
+                        <button class="option-button" on:click|preventDefault|stopPropagation={()=>{handlePollSubmit('no', pollOptions.pollType)}}>NO</button>
                     {/if}
                 </div>
             {/if}
@@ -128,11 +146,11 @@
     /* ### POLL OPTIONS STYLING ### */
 
     .yes-no-poll{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 0.6rem;
-   }
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.6rem;
+    }
 
    .option-button{
     width: 100%;

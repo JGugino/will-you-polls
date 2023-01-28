@@ -5,7 +5,7 @@
 
     let activePollGroups = [
         new ActiveGroup('family-group', 'gugino', [], 'Family 👪', [
-            new PollOptions('yn', ['Will you... create a poll?'], ['repeat', 'pin'], ['This is a comment']),
+            new PollOptions('yn', ['Will you... create a poll?'], ['repeat', 'pin'], ['This is a comment'], [{userID: crypto.randomUUID, choice: 'no'}]),
         ]),
         new ActiveGroup('friends-group', 'gugino', [], 'Friends 🎮', []),
     ];
