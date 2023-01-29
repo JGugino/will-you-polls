@@ -1,17 +1,26 @@
 <script>
-    const navRoutes = ["/", "/create", "/settings"];
+    const navRoutes = ["/", "/create?type=poll", "/create?type=group", "/settings"];
     const navIconParentPath = "./images/nav_icons";
+
+    let showCreateOptions = false;
 
 </script>
 
 <nav>
-    <a href={navRoutes[0]}><img src={`${navIconParentPath}/home_icon.svg`} alt="Home Button Icon"></a>
-    <a href={navRoutes[1]}><img class="main" src={`${navIconParentPath}/create_poll_icon.svg`} alt="Create Poll Button Icon"></a>
-    <a href={navRoutes[2]}><img src={`${navIconParentPath}/account_icon.svg`} alt="Settings Button Icon"></a>
+    <a href={navRoutes[0]} on:click={()=>{showCreateOptions = false}}><img src={`${navIconParentPath}/home_icon.svg`} alt="Home Button Icon"></a>
+    {#if showCreateOptions}
+        <div class="create-options">
+            <a href={navRoutes[1]} on:click={()=>{showCreateOptions = false}}><img src={`${navIconParentPath}/poll_create_icon.svg`} alt="Create Poll Button Icon"></a>
+            <a href={navRoutes[2]} on:click={()=>{showCreateOptions = false}}><img src={`${navIconParentPath}/create_group_icon.svg`} alt="Create Group Button Icon"></a>
+        </div>
+    {/if}
+    <a on:click|preventDefault|stopPropagation={()=>{showCreateOptions = !showCreateOptions}} href='#create'><img class="main" src={`${navIconParentPath}/create_icon.svg`} alt="Create Button Icon"></a>
+    <a href={navRoutes[3]} on:click={()=>{showCreateOptions = false}}><img src={`${navIconParentPath}/account_icon.svg`} alt="Settings Button Icon"></a>
 </nav>
 
 <style>
     nav{
+        position: relative;
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -47,5 +56,18 @@
         position: relative;
         width: 46px;
         height: 46px;
+    }
+
+    .create-options{
+        position: absolute;
+        display: flex;
+        gap: 0.4rem;
+        top: -2.6rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .create-options a{
+        border-radius: 10px;
     }
 </style>

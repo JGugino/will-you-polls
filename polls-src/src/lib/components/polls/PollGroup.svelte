@@ -1,5 +1,6 @@
 <script>
     import PollBase from "$lib/components/polls/PollBase.svelte";
+    import {currentUser} from '$lib/stores/currentUser';
 
     export let activeGroup;
     let pollGroupOpen = false;
@@ -30,8 +31,8 @@
         {:else}
             <div class="no-polls-dialouge">
                 <p class="no-polls">Doesn't look like there are any polls 👎</p>
-                {#if activeGroup.groupOwner == 'gugino'}
-                    <button><img src="./images/nav_icons/create_poll_icon.svg" alt="Icon to create a new pull inside the current group"></button>
+                {#if activeGroup.groupOwner === $currentUser.userID}
+                    <a href={`/create?type=poll&group=${activeGroup.groupID}`}><img src="./images/nav_icons/create_icon.svg" alt="Icon to create a new pull inside the current group"></a>
                 {/if}
             </div>  
         {/if}
@@ -83,7 +84,7 @@
         user-select: none;
     }
 
-    .no-polls-dialouge button{
+    .no-polls-dialouge a{
         background: var(--rich-black);
         border: none;
         cursor: pointer;

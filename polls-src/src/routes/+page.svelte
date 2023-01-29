@@ -1,14 +1,42 @@
 <script>
+    import { onMount } from 'svelte';
+
     import PollGroup from "$lib/components/polls/PollGroup.svelte";
     import ActiveGroup from '$lib/scripts/activeGroup.js'
     import PollOptions from '$lib/scripts/pollOptions.js'
 
+    export let data;
+
     let activePollGroups = [
         new ActiveGroup('family-group', 'gugino', [], 'Family 👪', [
-            new PollOptions('yn', ['Will you... create a poll?'], ['repeat', 'pin'], ['This is a comment'], [{userID: crypto.randomUUID, choice: 'no'}]),
-        ]),
-        new ActiveGroup('friends-group', 'gugino', [], 'Friends 🎮', []),
+            new PollOptions('yn', ['Will you... create a poll?'], ['repeat', 'pin'], ['This is a comment'], []),
+        ])
     ];
+
+    onMount(()=>{
+        const urlParams = data.urlParams;
+        const createType = urlParams.get('type');
+        
+        if(createType){
+            switch(createType){
+                case 'create-group':
+                    const groupCreator = urlParams.get('creator');
+                    const groupName = urlParams.get('name');
+                    
+                    if(!groupCreator) return;
+                    if(!groupName) return;
+
+                    //TODO: Save group to database under users account
+
+                    activePollGroups.push(new ActiveGroup(crypto.randomUUID(), groupCreator, [], groupName, []));
+                break;
+
+                case 'create-poll':
+
+                break;
+            }
+        }
+    });
 </script>
 
 <section class="home-section">
