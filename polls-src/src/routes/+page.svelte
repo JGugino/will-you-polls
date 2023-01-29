@@ -32,11 +32,23 @@
                 break;
 
                 case 'create-poll':
+                    const groupID = urlParams.get('group');
+                    const pollType = urlParams.get('pollType');
+                    const pollQuestion = urlParams.get('question');
+                    const pollOptions = urlParams.get('options');
 
+                    if(!groupID) return;
+                    if(!pollType) return;
+                    if(!pollQuestion) return;
+                    if(!pollOptions) return;
+
+                    console.log(findActiveGroup(groupID));
                 break;
             }
         }
     });
+
+    const findActiveGroup = (groupID) => activePollGroups.filter(group => group.groupID == groupID) || null;
 </script>
 
 <section class="home-section">

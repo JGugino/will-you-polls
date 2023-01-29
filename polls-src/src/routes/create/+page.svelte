@@ -14,19 +14,48 @@
     let groupName = "";
     let pollType = "yn";
     let pollQuestion = "";
+    let pollRepeat = false;
+    let pollNotify = false;
+    let pollPin = false;
 
     async function handleCreation(){
         let transferURL = "/";
 
         if(createType === 'poll'){
+            let options = formatOptions();
             if(pollType == 'yn'){
-                transferURL = '/?type=create-poll&group='+groupID+'&question='
+                transferURL = '/?type=create-poll&group='+groupID+'&pollType='+pollType+'&question='+pollQuestion+'&options='+options;
             }
         }else if(createType === 'group'){
             transferURL = '/?type=create-group&creator='+$currentUser.userID+'&name='+groupName;
         }
 
         await goto(transferURL);
+    }
+
+    function formatOptions(){
+        let options = [];
+        if(pollRepeat){
+            options.push('repeat');
+        }
+        if(pollPin){
+            options.push('pin');
+        }
+        if(pollNotify){
+            options.push('notify');
+        }
+
+        let finalString = '';
+
+        options.forEach(option => {
+            if(options.indexOf(option) != options.length - 1){
+                finalString += option+'/';
+            }else{
+                finalString += option;
+            }
+        });
+
+        return finalString;
     }
 
 </script>
@@ -61,13 +90,13 @@
         {/if}
         
         <label for="poll-repeat-option">Repeat Poll</label>
-        <input type="checkbox" name="poll-repeat-option" id="poll-repeat-option">
+        <input type="checkbox" name="poll-repeat-option" id="poll-repeat-option" bind:checked={pollRepeat}>
 
         <label for="poll-repeat-option">Pin Poll</label>
-        <input type="checkbox" name="poll-pin-option" id="poll-pin-option">
+        <input type="checkbox" name="poll-pin-option" id="poll-pin-option" bind:checked={pollPin}>
 
         <label for="poll-repeat-option">Notify Members</label>
-        <input type="checkbox" name="poll-notify-option" id="poll-notify-option">
+        <input type="checkbox" name="poll-notify-option" id="poll-notify-option" bind:checked={pollNotify}>
 
         <button class='create-button' on:click|preventDefault|stopPropagation={handleCreation}>Create Poll</button>
     {:else if createType === 'group'}
