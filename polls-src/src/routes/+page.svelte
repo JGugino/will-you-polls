@@ -1,16 +1,18 @@
 <script>
     import { onMount } from 'svelte';
 
+    import { currentUser } from '$lib/stores/currentUser'
+
     import PollGroup from "$lib/components/polls/PollGroup.svelte";
-    import ActiveGroup from '$lib/scripts/activeGroup.js'
-    import PollOptions from '$lib/scripts/pollOptions.js'
+    import ActiveGroup from '$lib/scripts/activeGroup'
+    import PollOptions from '$lib/scripts/pollOptions'
 
     export let data;
 
+    const tempID = crypto.randomUUID();
+
     let activePollGroups = [
-        new ActiveGroup('family-group', 'gugino', [], 'Family 👪', [
-            new PollOptions('yn', ['Will you... create a poll?'], ['repeat', 'pin'], ['This is a comment'], []),
-        ])
+        new ActiveGroup(tempID, $currentUser.userID, [], 'Family 👪', [])
     ];
 
     onMount(()=>{
@@ -40,15 +42,15 @@
                     if(!groupID) return;
                     if(!pollType) return;
                     if(!pollQuestion) return;
-                    if(!pollOptions) return;
 
-                    console.log(findActiveGroup(groupID));
+                    console.log(groupID);
+                    console.log(activePollGroups);
                 break;
             }
         }
     });
 
-    const findActiveGroup = (groupID) => activePollGroups.filter(group => group.groupID == groupID) || null;
+    const findActiveGroup = (groupID) => activePollGroups.filter(group => group.groupID === groupID) || null;
 </script>
 
 <section class="home-section">

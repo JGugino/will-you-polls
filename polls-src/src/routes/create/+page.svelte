@@ -12,21 +12,30 @@
     $: groupID = urlParams.get('group') || 'none';
 
     let groupName = "";
+    let pollGroup = "";
     let pollType = "yn";
+    let pollStarter = "will";
     let pollQuestion = "";
     let pollRepeat = false;
     let pollNotify = false;
     let pollPin = false;
 
+    //TODO: Set the selected group after loading 
+
     async function handleCreation(){
         let transferURL = "/";
 
         if(createType === 'poll'){
+            if(pollQuestion.length <= 0) return;
+
             let options = formatOptions();
             if(pollType == 'yn'){
-                transferURL = '/?type=create-poll&group='+groupID+'&pollType='+pollType+'&question='+pollQuestion+'&options='+options;
+                transferURL = '/?type=create-poll&group='+groupID+'&pollType='+pollType+'&question='+pollQuestion+'&starter'+pollStarter+'&options='+options;
             }
         }else if(createType === 'group'){
+
+            if(groupName.length <= 0) return;
+
             transferURL = '/?type=create-group&creator='+$currentUser.userID+'&name='+groupName;
         }
 
@@ -74,7 +83,8 @@
         {#if groupID == 'none'}
             <div class="custom-select">
                 <label for="poll-type-selector">Group</label>
-                <select name="poll-type-select" id='poll-type-selector' class="poll-type-selector" bind:value={pollType}>
+                <select name="poll-type-select" id='poll-type-selector' class="poll-type-selector" bind:value={pollGroup}>
+                    <!--TODO: Load in groups owned by current user-->
                     <option value="yn">Group One</option>
                     <option value="cust">Group Two</option>
                 </select>
@@ -82,6 +92,16 @@
         {:else}
             <h3>Selected: {groupID}</h3>
         {/if}
+        
+        <div class="custom-select">
+            <label for="poll-type-selector">Starter</label>
+            <select name="poll-starter-select" id='poll-starter-selector' class="poll-starter-selector" bind:value={pollStarter}>
+                <option value="will">Will you</option>
+                <option value="can">Can you</option>
+                <option value="how">How are</option>
+                <option value="do">Do you</option>
+            </select>
+        </div>
 
         <input type="text" name="poll-question-input" id="poll-question-input" class='create-input' bind:value={pollQuestion} placeholder="Poll Question">
         
