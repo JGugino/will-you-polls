@@ -5,7 +5,7 @@
 
 <svelte:head>
     <title>Will You? - When you need to know</title>
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="/app.css">
 </svelte:head>
 
 <Header />
