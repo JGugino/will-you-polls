@@ -26,14 +26,14 @@ export async function createNewUser(firstName, lastName, username, email, passwo
 
             returning uuid, username
         `
-    return createdUser;
+    return {status: 'ok', message: 'user-created', data: createdUser};
 }
 
-export function deleteUser(uuid){
-    const deletedUser = sql`
+export async function deleteUser(uuid){
+    await sql`
         delete from users where uuid = ${uuid}
     `
-    return deletedUser;
+    return {status: 'ok', message: 'user-deleted'};
 }
 
 export async function findUserByEmail(email){
@@ -41,7 +41,7 @@ export async function findUserByEmail(email){
         select * from users where email = ${email}
         returning uuid, username
     `
-    return foundEmail;
+    return {status: 'ok', message: 'user-found', data: foundEmail};
 }
 
 export async function usernameTaken(username){
