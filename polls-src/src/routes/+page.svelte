@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
 
     import { currentUser } from '$lib/stores/currentUser'
 
@@ -9,13 +10,13 @@
 
     export let data;
 
-    const tempID = crypto.randomUUID();
+    let activePollGroups = [];
 
-    let activePollGroups = [
-        new ActiveGroup(tempID, $currentUser.userID, [], 'Family 👪', [])
-    ];
+    onMount(async ()=>{
+        if(!$currentUser.loggedIn){
+            return await goto('/account/signup');
+        }
 
-    onMount(()=>{
         const urlParams = data.urlParams;
         const createType = urlParams.get('type');
         

@@ -1,4 +1,6 @@
 <script>
+    import { currentUser } from '$lib/stores/currentUser'
+
     import Header from "$lib/components/core/Header.svelte";
     import FooterNav from "$lib/components/core/FooterNav.svelte";
 </script>
@@ -14,7 +16,9 @@
     <slot/>
 </main>
 
+{#if $currentUser.loggedIn}
 <FooterNav/>
+{/if}
 
 <style>
 

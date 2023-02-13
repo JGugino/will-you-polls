@@ -15,5 +15,5 @@ export async function POST({request}){
         return new Response(createBasicJSONMessage(400, {message: createdUser.message}));
     }
 
-    return new Response(createBasicJSONMessage(200, {message: createdUser.message}));
+    return new Response(createBasicJSONMessage(200, {message: createdUser.message, data: createdUser.data}));
 }

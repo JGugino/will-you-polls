@@ -1,5 +1,7 @@
 <script>
 
+    import { goto } from '$app/navigation';
+
     let currentError = 'none';
 
     async function handleSignupForm(e){
@@ -24,6 +26,8 @@
         }
 
         resetErrorMessage();
+
+        await goto(`/account/login?uname=${responseJson.body.data[0].username}`);
     }
 
     function setErrorMessage(error){
@@ -70,6 +74,10 @@
     function resetErrorMessage() { currentError = 'none' }
 </script>
 
+<svelte:head>
+    <title>Will You? - Signup for an account</title>
+</svelte:head>
+
 <section class='signup-section'>
     <h2>Signup</h2>
     {#if currentError !== 'none'}
@@ -84,6 +92,7 @@
         <input class="create-input" type="password" name="signup-password-confirm" id="signup-password-confirm" placeholder="Confirm Password" required>
         <button class="create-button" type="submit">Sign Up</button>
     </form>
+    <a href="/account/login">Have an account? Login here</a>
 </section>
 
 <style>
@@ -92,7 +101,7 @@
         flex-direction: column;
         justify-content: center;
         width: 100%;
-        padding: 0.8rem 0;
+        padding: 1rem 0;
     }
 
     .signup-section > form{
@@ -107,6 +116,13 @@
         text-align: center;
         font-size: 24pt;
         padding: 0 0 0.8rem 0;
+    }
+
+    .signup-section > a{
+        color: var(--rich-black);
+        text-decoration: none;
+        text-align: center;
+        margin: 0.4rem 0;
     }
 
     .create-input{

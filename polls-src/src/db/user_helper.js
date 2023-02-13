@@ -1,4 +1,7 @@
+import bcrypt from 'bcrypt'
+
 import { sql } from "./postgres_connect";
+
 
 const passwordMinLength = 12;
 const usernameMaxLength = 60;
@@ -18,15 +21,22 @@ export async function createNewUser(firstName, lastName, username, email, passwo
     if(await usernameTaken(username)) return { status: 'error', message: 'username-taken'}
     if(await emailTaken(email)) return { status: 'error', message: 'email-taken'}
 
+    const passSalt = await bcrypt.genSalt();
+    const hashedPass = await bcrypt.hash(password, passSalt);
+
     const createdUser = await sql`
             insert into users
                 (first_name, last_name, username, email, password)
             values
-                (${firstName}, ${lastName}, ${username}, ${email}, ${password})
+                (${firstName}, ${lastName}, ${username}, ${email}, ${hashedPass})
 
             returning uuid, username
         `
     return {status: 'ok', message: 'user-created', data: createdUser};
+}
+
+export async function loginUser(username, password){
+
 }
 
 export async function deleteUser(uuid){

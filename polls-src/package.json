@@ -24,6 +24,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"postgres": "^3.3.3"
+		"bcrypt": "^5.1.0",
+		"jsonwebtoken": "^9.0.0",
+		"postgres": "^3.3.3",
+		"sha256": "^0.2.0"
 	}
 }
