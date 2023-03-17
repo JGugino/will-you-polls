@@ -36,6 +36,13 @@ export async function createNewUser(firstName, lastName, username, email, passwo
 }
 
 export async function loginUser(username, password){
+    const foundUser = await findUserByUsername(username);
+
+    if(!foundUser) return { status: 'error', message: 'no-user' }
+
+    const passwordValid = await validateUserPassword(password, foundUser.data.password);
+
+    if(passwordValid.message != 'password-valid') return { status: 'error', message: 'invalid-password' }
 
 }
 
@@ -51,7 +58,14 @@ export async function findUserByEmail(email){
         select * from users where email = ${email}
         returning uuid, username
     `
-    return {status: 'ok', message: 'user-found', data: foundEmail};
+    return {status: 'ok', message: 'user-found', data: foundEmail[0]};
+}
+
+export async function findUserByUsername(username){
+    const foundUsername = await sql`
+        select * from users where username = ${username}
+    `
+    return {status: 'ok', message: 'user-found', data: foundUsername[0]};
 }
 
 export async function usernameTaken(username){
@@ -68,4 +82,13 @@ export async function emailTaken(email){
     `;
 
     return foundEmails.length <= 0 ? false : true;
+}
+
+export async function validateUserPassword(givenPassword, storedPassword){
+    await bcrypt.compare(givenPassword, storedPassword, async (err, response)=>{
+        if(response){
+            return { status: 'ok', message: 'password-valid' };
+        }
+        return { status: 'error', message: 'invalid-password', error: err };
+    });
 }

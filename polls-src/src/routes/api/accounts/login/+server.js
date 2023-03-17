@@ -1,4 +1,4 @@
-import { generateFingerprint } from '$db/token_helper';
+import { loginUser } from '$db/user_helper';
 import { createBasicJSONMessage } from '$lib/scripts/message_helper';
 
 export async function POST({request}){
@@ -7,6 +7,8 @@ export async function POST({request}){
     if(!requestJSON || !requestJSON.username || !requestJSON.password){
         return new Response(createBasicJSONMessage(400, {message: 'invaild-request'}));
     }
+
+    const loggedInUser = await loginUser(requestJSON.username, requestJSON.password);
 
     //TODO:
     //Check if username exists
