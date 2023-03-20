@@ -1,6 +1,7 @@
 <script>
 
     import { goto } from '$app/navigation';
+    import { currentUser } from '$lib/stores/currentUser';
 
     let currentError = 'none';
 
@@ -22,12 +23,16 @@
         const responseJson = await createResponse.json();
 
         if(responseJson.status !== 200){
-            return setErrorMessage(responseJson.body.message);
+            return setErrorMessage(responseJson.body.message | "invalid-request");
         }
 
         resetErrorMessage();
 
-        await goto(`/account/login?uname=${responseJson.body.data[0].username}`);
+        $currentUser.uuid = responseJson.body.data.uuid;
+        $currentUser.username = responseJson.body.data.username;
+        $currentUser.loggedIn = true;
+
+        await goto(`/`);
     }
 
     function setErrorMessage(error){

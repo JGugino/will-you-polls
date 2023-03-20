@@ -9,7 +9,7 @@ export const generateJWT = async (data, secret, expire) => await jwt.sign(data, 
 export async function generateFingerprint(){
     const fingerprintSalt = await bcrypt.genSalt();
     const fingerprint = await sha256(crypto.randomBytes(64).toString());
-    const hashedFingerprint = bcrypt.hash(fingerprint, fingerprintSalt);
+    const hashedFingerprint = await bcrypt.hash(fingerprint, fingerprintSalt);
 
     return { fingerprint, hashedFingerprint }
 }
@@ -94,6 +94,22 @@ export async function validateToken(token, secret){
     } catch (error) {
         return { status: 'error', message: 'invalid-token' };
     }
+}
+
+export async function validateFingerprint(fingerprint, hashedFingerprint){
+    try{
+        return await bcrypt.compare(fingerprint, hashedFingerprint);
+    }catch(error){
+        return { status: 'error', message: 'fingerprint-validation-fail', error}
+    }
+}
+
+export function dismatleAuthHeader(authString){
+    if(authString.length < 0) return { status: 'error', message: 'invalid-request' };
+
+    const split = authString.split[':'];
+
+    return { auth: split[1], refresh: split[2] };
 }
 
 export async function generateAuthPackage(uuid, username, secrets, expirations){

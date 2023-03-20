@@ -3,7 +3,7 @@ import { generateAuthPackage, storeNewRefreshToken } from '$db/token_helper';
 import { createBasicJSONMessage } from '$lib/scripts/message_helper';
 import { REFRESH_TOKEN_SECRET, AUTH_TOKEN_SECRET } from '$env/static/private';
 
-export async function POST({request, setHeaders}){
+export async function POST({request, setHeaders, cookies}){
     const requestJSON = await request.json();
 
     if(!requestJSON || !requestJSON.firstName || !requestJSON.lastName 
@@ -24,9 +24,10 @@ export async function POST({request, setHeaders}){
     setHeaders({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Authentication": `Bearer:${authPackage.authToken}:${authPackage.refreshToken}`,
-        "Fingerprint": `Bearer:${authPackage.fingerprint}`
+        "Authentication": `Bearer:${authPackage.authToken}:${authPackage.refreshToken}`
     });
 
-    return new Response(createBasicJSONMessage(200, {message: createdUser.message, data: createdUser.data}));
+    cookies.set('print', authPackage.fingerprint, {path: '/', httpOnly: true, sameSite: 'strict', secure: true});
+
+    return new Response(createBasicJSONMessage(200, {message: createdUser.message, data: createdUser.data[0]}));
 }
